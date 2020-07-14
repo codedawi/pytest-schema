@@ -126,7 +126,7 @@ def match(exact: bool = True) -> Callable:
     """
     def _decorator(f: Callable):
         @wraps(f)
-        def _wrapper(self: AssertSchema, value: Any) -> bool:
+        def _wrapper(self: Schema, value: Any) -> bool:
             """
             Wraps the cls methods of AssertSchema object to
             toggle the _ignore_extra_keys property.
