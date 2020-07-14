@@ -15,6 +15,8 @@ from pytest_schema import schema, And, Enum, Optional, Or, Regex
 
 # single user schema
 user = {
+    # id must be int
+    "id": int,
     # name must be type str
     "name": str,
     # email must be type str or nullable
@@ -22,11 +24,22 @@ user = {
     # email valid str format
     "email": Regex(r".*?@.*?\.[A-Za-z]{2,6}"),
     # age converted to int then validated gt 18 lt 99 and must be type str
-    "age": And(str, lambda n: 18 <= int(n) <= 99),
+    "age": And(int, lambda n: 18 <= n <= 99),
     # gender key is optional but must be str
     Optional("gender"): str,
     # role of enum values
     "role": Enum(["user", "super-user", "admin"]),
+    # list of ids ref friends
+    "friends": [ int ],
+    # nested dict to valid as address
+    "address": {
+        "street": str,
+        Optional("street2"): str,
+        "city": str,
+        "state": And(str, lambda s: len(s) == 2),
+        "zipcode": str,
+    }
+
 }
 
 # multiple users schema
@@ -37,18 +50,47 @@ def test_users_endpoint():
     Test calling a users endpoint and its response of users info.
     """
     response = [
+        # ✅ Valid 
         {
+            "id": 2,
             "name": "Sue",
-            "age": "28",
+            "age": 28,
             "email": "sue@gmail.com",
             "gender": "female",
             "role": "admin",
+            "friends": [5, 6],
+            "address": {
+                "street": "123 Washington Ave.",
+                "city": "New York",
+                "state": "NY",
+                "zipcode": "099012",
+            }
         },
+        # ✅ Valid
         {
+            "id": 5
             "name": "Sam",
-            "age": "42",
+            "age": 42,
             "email": "sam@aol.com",
             "role": "user",
+            "friends": [2, 6, 7],
+            "address": {
+                "street": "5 Sunset St.",
+                "street2": "Apt # 55-b",
+                "city": "San Jose",
+                "state": "CA",
+                "zipcode": "054053",
+            }
+        },
+        # ❌ Invalid
+        {
+            "id": "null",
+            "name": None,
+            "age": 0,
+            "email": "unknown@msn",
+            "role": "unknown",
+            "friends": None,
+            "address": "5 Sunset St., San Jose, CA, 054053",
         },
     ]
 
