@@ -5,7 +5,7 @@
 
 👍 Validate return values against a schema-like object in testing
 
-[schema v0.7](https://github.com/keleshev/schema) is a library for validating Python data structures, such as
+[`keleshev/schema`](https://github.com/keleshev/schema) is a library for validating Python data structures, such as
 those obtained from config-files, forms, external services or
 command-line parsing, converted from JSON/YAML (or something else) to Python data-types.
 
@@ -157,4 +157,4 @@ If data is **`invalid`**, it will raise `SchemaError` exception.
 
 ## Supported validations
 
-See: [schema v0.7](https://github.com/keleshev/schema) full documentation.
+See: [keleshev/schema](https://github.com/keleshev/schema) full documentation.
