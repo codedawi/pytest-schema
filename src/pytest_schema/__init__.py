@@ -1,5 +1,5 @@
+from pytest_schema.helpers import exact_schema, like_schema, schema
 from pytest_schema.schema import Schema, SchemaError
-from pytest_schema.helpers import schema, like_schema, exact_schema
 from pytest_schema.types import (
     And,
     Enum,
@@ -11,7 +11,6 @@ from pytest_schema.types import (
     Regex,
     Use,
 )
-
 
 __all__ = [
     "Schema",

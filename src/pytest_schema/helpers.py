@@ -56,7 +56,7 @@ def like_schema(value: Any) -> Schema:
     Returns:
         Schema: initialized and configured class with non exact match requirements
 
-    
+
     Example:
 
         ✅ assert like\_schema({ "status": int }) == {"status": 404}

@@ -1,5 +1,6 @@
 import pytest
-from pytest_schema import schema, SchemaError
+
+from pytest_schema import SchemaError, schema
 
 
 @pytest.mark.parametrize(
@@ -13,7 +14,7 @@ from pytest_schema import schema, SchemaError
         (("hello", "world"), tuple),
         (["hello", "world"], list),
         (lambda k: True, callable),
-    ]
+    ],
 )
 def test_schema_standard_types(value, type_schema):
 
@@ -31,7 +32,7 @@ def test_schema_standard_types(value, type_schema):
         (("hello", "world"), str),
         (["hello", "world"], str),
         (lambda k: True, None),
-    ]
+    ],
 )
 def test_schema_notequal_standard_types(value, type_schema):
 
@@ -49,7 +50,7 @@ def test_schema_notequal_standard_types(value, type_schema):
         (("hello", "world"), list),
         (["hello", "world"], dict),
         (lambda k: True, bool),
-    ]
+    ],
 )
 def test_schema_notequal_standard_types(value, type_schema):
 

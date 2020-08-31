@@ -1,9 +1,11 @@
-from schema import And, Or, Hook, Use, Optional, Regex, Forbidden, Literal
+from schema import And, Forbidden, Hook, Literal, Optional, Or, Regex, Use
+
 from pytest_schema.schema import Schema
 
 
 class Enum(Schema):
     """Simple interface to create Enum like schema."""
+
     def __init__(self, *value):
         """
         Initialize schema with list or tuple like values.

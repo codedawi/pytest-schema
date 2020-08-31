@@ -1,10 +1,13 @@
-import os
 import codecs
-from setuptools import setup, find_packages
+import os
+
+from setuptools import find_packages, setup
+
 
 def read(name: str):
     file_path = os.path.join(os.path.dirname(__file__), name)
     return codecs.open(file_path, encoding="utf-8").read()
+
 
 setup(
     name="pytest-schema",
@@ -21,9 +24,9 @@ setup(
         "pytest>=3.5.0",
         "schema>=0.7.0",
     ],
-    setup_requires=['setuptools_scm'],
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    setup_requires=["setuptools_scm"],
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
     classifiers=[
