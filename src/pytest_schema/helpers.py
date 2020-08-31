@@ -36,11 +36,9 @@ def exact_schema(value: Any) -> Schema:
         Schema: initialized and configured class with exact match requirements
 
     Example:
-
-        ✅ assert exact\_schema({ "status": int }) == {"status": 404}
-        ❌ assert exact\_schema({ "status": int }) == {"status": "404"}
-        ❌ assert exact\_schema({ "status": int }) == {"status": 404, "timestamp": 1594358256}
-
+        ✅ assert exact_schema({ "status": int }) == {"status": 404}
+        ❌ assert exact_schema({ "status": int }) == {"status": "404"}
+        ❌ assert exact_schema({ "status": int }) == {"status": 404, "timestamp": 1594358256}
     """
     return schema(value, ignore_extra_keys=False)
 
@@ -56,12 +54,9 @@ def like_schema(value: Any) -> Schema:
     Returns:
         Schema: initialized and configured class with non exact match requirements
 
-
     Example:
-
-        ✅ assert like\_schema({ "status": int }) == {"status": 404}
-        ❌ assert like\_schema({ "status": int }) == {"status": "404"}
-        ✅ assert like\_schema({ "status": int }) == {"status": 404, "timestamp": 1594358256}
-
+        ✅ assert like_schema({ "status": int }) == {"status": 404}
+        ❌ assert like_schema({ "status": int }) == {"status": "404"}
+        ✅ assert like_schema({ "status": int }) == {"status": 404, "timestamp": 1594358256}
     """
     return schema(value, ignore_extra_keys=True)
