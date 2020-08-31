@@ -5,10 +5,43 @@
 those obtained from config-files, forms, external services or
 command-line parsing, converted from JSON/YAML (or something else) to Python data-types.
 
-## Example
+## Install
 
-Here is a quick example to get a feeling of **schema**, validating a
-list of entries with personal information:
+```bash
+pip install pytest-schema
+```
+
+## Basic Example
+
+Here is a quick example of using **`schema`**:
+```python
+from pytest_schema import schema
+
+article_v1 = {
+    "id": int,
+    "title": str,
+    "completed": bool,
+    "engagement": {
+        "viewer": list,
+        "rating": float,
+    },
+    "metadata": dict
+}
+
+def test_article_v1_endpoint(test_client):
+    """
+    Test calling a article endpoint and validating its
+    response for a article is correctly formatted.
+    """
+
+    response = test_client.get("/api/v1/article/1)
+
+    assert schema(article_v1) == response
+
+```
+## Full Example
+
+Here is a more complex example of using **`schema`**:
 
 ``` python
 from pytest_schema import schema, And, Enum, Optional, Or, Regex
@@ -47,7 +80,8 @@ users = [ user ]
 
 def test_users_endpoint():
     """
-    Test calling a users endpoint and its response of users info.
+    Test calling a users endpoint and validating its
+    response of users info is correct format.
     """
     response = [
         # ✅ Valid 
@@ -82,6 +116,16 @@ def test_users_endpoint():
                 "zipcode": "054053",
             }
         },
+    ]
+
+    assert schema(users) == response
+
+def test_users_endpoint_INVALID():
+    """
+    Test calling a users endpoint and validating its
+    response of users info is INVALID format.
+    """
+    response = [
         # ❌ Invalid
         {
             "id": "null",
@@ -94,183 +138,19 @@ def test_users_endpoint():
         },
     ]
 
-    assert schema(users) == response
+    # Option 1:
+    assert schema(users) != response
+    
+    # Option 2:
+    with pytest.raises(SchemaError):
+        schema(users) == response
 
 ```
 
 If data is **`valid`**, it will return the `True`.
 If data is **`invalid`**, it will raise `SchemaError` exception.
 
-## Installation
-
-Use [`pip`](http://pip-installer.org):
-```bash
-pip install pytest-schema
-```
 
 ## Supported validations
 
-The resulting JSON schema is not guaranteed to accept the same objects
-as the library would accept, since some validations are not implemented
-or have no JSON schema equivalent. This is the case of the `Use` and
-`Hook` objects for example.
-
-### [Object properties](https://json-schema.org/understanding-json-schema/reference/object.html#properties)  
-
-Use a dict literal. The dict keys are the JSON schema properties.
-    
-Python:
-```python
-{ "test": str }
-```
-
-Json Schema:
-```json
-{
-    "type": "object",
-    "properties": {
-        "test": {"type": "string"}
-    },
-    "required": ["test"],
-    "additionalProperties": false,
-}
-```
-
-Please note that attributes are required by default. To create
-optional attributes use `Optional`, like so:
-
-Python:
-
-```python
-{ Optional("test"): str }
-```
-    
-Json Schema:
-```json
-{
-    "type": "object", 
-    "properties": {
-        "test": { "type": "string" }
-    },
-    "required": [],
-    "additionalProperties": false
-}
-```
-
-### Types  
-
-Use the Python type name directly. It will be converted to the JSON name:
-
-| Python | Json | Json Schema|
-| - | - | - |
-| `str` | [string](https://json-schema.org/understanding-json-schema/reference/string.html)| `{ "type": "string" }` |
-|`int` | [integer](https://json-schema.org/understanding-json-schema/reference/numeric.html#integer) | `{ "type": "integer" }`  |
-| `float` | [number](https://json-schema.org/understanding-json-schema/reference/numeric.html#number) | `{ "type": "number" }` |
-| `bool` | [boolean](https://json-schema.org/understanding-json-schema/reference/boolean.html) | `{ "type": "boolean" }` |
-| `list` | [array](https://json-schema.org/understanding-json-schema/reference/array.html) | `{ "type": "array" }` |
-| `dict` | [object](https://json-schema.org/understanding-json-schema/reference/object.html) | `{ "type": "object" }`  |
-
-### [Array items](https://json-schema.org/understanding-json-schema/reference/array.html#items)  
-
-Surround a schema with `[]`.
-    
-Python:
-```python
-[str] # means an array of string and becomes
-```
-
-Json Schema:
-```json
-{
-    "type": "array",
-    "items": { "type": "string" }
-}
-```
-
-### [Enumerated values](https://json-schema.org/understanding-json-schema/reference/generic.html#enumerated-values)  
-
-Use `Enum` or `Or`.
-
-Python:
-```python
-Enum([1, 2, 3])
-# or
-Or(1, 2, 3)
-```
- 
-Json Schema: 
-```json
-{ "enum": [1, 2, 3] }
-```
-
-### [Constant values](https://json-schema.org/understanding-json-schema/reference/generic.html#constant-values)  
-
-Use the value itself or `Const`.
-    
-Python:
-```python
-"name"
-# or
-Const("name")
-```
-
-```json
-{ "const": "name" }
-```
-
-### [Regular expressions](https://json-schema.org/understanding-json-schema/reference/regular_expressions.html)  
-Use `Regex`.
-    
-Python:
-```python
-Regex(r"^v\d+")
-```
-
-Json Schema:
-```json
-{
-    "type": "string",
-    "pattern": "^v\\d+"
-}
-```
-
-### [Combining schemas with allOf](https://json-schema.org/understanding-json-schema/reference/combining.html#allof)  
-
-Use `And`.
-    
-Python:
-```python
-And(str, "value")
-```
-
-Json Schema:
-```json
-{
-    "allOf": [
-        { "type": "string" },
-        { "const": "value" }
-    ]
-}
-```
-
-_Note that this example is not really useful in the real world, since
-`const` already implies the type._
-
-### [Combining schemas with anyOf](https://json-schema.org/understanding-json-schema/reference/combining.html#anyof)  
-
-Use `Or`.
-    
-Python:
-```python
-Or(str, int)
-```
-
-Json Schema:
-```json
-{
-    "anyOf": [
-        { "type": "string" },
-        { "type": "integer" }
-    ]
-}
-```
+See: [schema v0.7](https://github.com/keleshev/schema) full documentation.

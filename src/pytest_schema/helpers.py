@@ -1,6 +1,6 @@
 from typing import Any
 
-from pytest_schema.assert_schema import Schema
+from pytest_schema.schema import Schema
 
 
 def schema(value: Any, **kargs) -> Schema:

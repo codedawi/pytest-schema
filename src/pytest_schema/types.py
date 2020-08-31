@@ -1,5 +1,5 @@
 from schema import And, Or, Hook, Use, Optional, Regex, Forbidden, Literal
-from pytest_schema.assert_schema import Schema
+from pytest_schema.schema import Schema
 
 
 class Enum(Schema):
