@@ -34,7 +34,7 @@ def test_article_v1_endpoint(test_client):
     response for a article is correctly formatted.
     """
 
-    response = test_client.get("/api/v1/article/1)
+    response = test_client.get("/api/v1/article/1")
 
     assert schema(article_v1) == response
 
