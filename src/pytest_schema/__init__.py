@@ -17,6 +17,8 @@ __all__ = [
     "schema",
     "like_schema",
     "exact_schema",
+    "like",
+    "exact",
     "And",
     "Enum",
     "Forbidden",
