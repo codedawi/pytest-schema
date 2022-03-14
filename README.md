@@ -19,7 +19,7 @@ pip install pytest-schema
 
 Here is a quick example of using **`schema`**:
 ```python
-from pytest_schema import schema
+from pytest_schema import schema, exact, like
 
 article_v1 = {
     "id": int,
@@ -34,13 +34,26 @@ article_v1 = {
 
 def test_article_v1_endpoint(test_client):
     """
-    Test calling a article endpoint and validating its
-    response for a article is correctly formatted.
+    Test calling v1 endpoint and validating the response
+    is in the correctly/expected format.
     """
+    response_v1 = test_client.get("/api/v1/article/1")
+    assert exact(article_v1) == response_v1
+    # Same as:
+    # assert schema(article_v1) == response_v1
 
-    response = test_client.get("/api/v1/article/1")
+article_v2 = {
+    **article_v1,
+    "someNewField": int
+}
 
-    assert schema(article_v1) == response
+def test_article_v2_endpoint(test_client):
+    """
+    Test calling v2 endpoint is backwards compatible with v1
+    """
+    response_v2 = test_client.get("/api/v2/article/1")
+
+    assert like(article_v1) == value
 
 ```
 ## Full Example
