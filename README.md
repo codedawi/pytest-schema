@@ -19,7 +19,7 @@ pip install pytest-schema
 
 Here is a quick example of using **`schema`**:
 ```python
-from pytest_schema import schema, exact, like
+from pytest_schema import schema, exact_schema, like_schema
 
 article_v1 = {
     "id": int,
@@ -38,7 +38,7 @@ def test_article_v1_endpoint(test_client):
     is in the correctly/expected format.
     """
     response_v1 = test_client.get("/api/v1/article/1")
-    assert exact(article_v1) == response_v1
+    assert exact_schema(article_v1) == response_v1
     # Same as:
     # assert schema(article_v1) == response_v1
 
@@ -53,7 +53,7 @@ def test_article_v2_endpoint(test_client):
     """
     response_v2 = test_client.get("/api/v2/article/1")
 
-    assert like(article_v1) == value
+    assert like_schema(article_v1) == response_v2
 
 ```
 ## Full Example
@@ -61,7 +61,8 @@ def test_article_v2_endpoint(test_client):
 Here is a more complex example of using **`schema`**:
 
 ``` python
-from pytest_schema import schema, And, Enum, Optional, Or, Regex
+import pytest
+from pytest_schema import schema, And, Enum, Optional, Or, Regex, SchemaError
 
 # single user schema
 user = {
@@ -69,7 +70,7 @@ user = {
     "id": int,
     # name must be type str
     "name": str,
-    # email must be type str or nullable
+    # description must be type str or nullable
     "description": Or(None, str),
     # email valid str format
     "email": Regex(r".*?@.*?\.[A-Za-z]{2,6}"),
@@ -78,7 +79,7 @@ user = {
     # gender key is optional but must be str
     Optional("gender"): str,
     # role of enum values
-    "role": Enum(["user", "super-user", "admin"]),
+    "role": Enum("user", "super-user", "admin"),
     # list of ids ref friends
     "friends": [ int ],
     # nested dict to valid as address
@@ -105,6 +106,7 @@ def test_users_endpoint():
         {
             "id": 2,
             "name": "Sue",
+            "description": "Sue, the admin",
             "age": 28,
             "email": "sue@gmail.com",
             "gender": "female",
@@ -119,8 +121,9 @@ def test_users_endpoint():
         },
         # ✅ Valid
         {
-            "id": 5
+            "id": 5,
             "name": "Sam",
+            "description": "Sam, the user",
             "age": 42,
             "email": "sam@aol.com",
             "role": "user",
