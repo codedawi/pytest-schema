@@ -1,6 +1,6 @@
 # pytest-schema
 
-![](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue?logo=python) [![PyPI version](https://img.shields.io/pypi/v/pytest-schema.svg)](https://pypi.python.org/pypi/pytest-schema/) [![PyPI download month](https://img.shields.io/pypi/dm/pytest-schema.svg)](https://pypi.python.org/pypi/pytest-schema/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue?logo=python) [![PyPI version](https://img.shields.io/pypi/v/pytest-schema.svg)](https://pypi.python.org/pypi/pytest-schema/) [![PyPI download month](https://img.shields.io/pypi/dm/pytest-schema.svg)](https://pypi.python.org/pypi/pytest-schema/) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 
 👍 Validate return values against a schema-like object in testing
